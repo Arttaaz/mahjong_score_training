@@ -60,9 +60,8 @@ fn main() {
         // cap to mangan
         base_score = base_score.min(2000);
 
-        let payout_ron = round_up_100(base_score * 4);
         let payout_ko = round_up_100(base_score);
-        let payout_oya = round_up_100(base_score * 2);
+        let mut payout_oya = round_up_100(base_score * 2);
 
         if tsumo {
             print!("子: ");
@@ -70,6 +69,7 @@ fn main() {
             print!("親: ");
             scanf!("{}", number_oya);
         } else {
+            payout_oya = round_up_100(base_score * 4);
             scanf!("{}", number_oya);
             // does not matter for ron
             number_ko = payout_ko;
