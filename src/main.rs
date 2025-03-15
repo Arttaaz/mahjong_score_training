@@ -2,7 +2,7 @@
 
 use scanf::scanf;
 
-use std::{io::Write, mem::uninitialized, random::random};
+use std::random::random;
 
 const FU: [u32; 3] = [
     20, 30, 40
@@ -65,12 +65,21 @@ fn main() {
 
         if tsumo {
             print!("子: ");
-            scanf!("{}", number_ko);
+            match scanf!("{}", number_ko) {
+                Ok(_) => (),
+                Err(e) => eprintln!("scanf error: {}", e),
+            };
             print!("親: ");
-            scanf!("{}", number_oya);
+            match scanf!("{}", number_oya) {
+                Ok(_) => (),
+                Err(e) => eprintln!("scanf error: {}", e),
+            };
         } else {
             payout_oya = round_up_100(base_score * 4);
-            scanf!("{}", number_oya);
+            match scanf!("{}", number_oya) {
+                Ok(_) => (),
+                Err(e) => eprintln!("scanf error: {}", e),
+            };
             // does not matter for ron
             number_ko = payout_ko;
         }
@@ -90,4 +99,28 @@ fn main() {
         }
     }
 
+}
+
+
+#[test]
+fn test_valid_hand_value_check() {
+    assert!(is_hand_value_valid(2, 30, true));
+    assert!(is_hand_value_valid(1, 30, true));
+    assert!(is_hand_value_valid(3, 30, false));
+    assert!(is_hand_value_valid(1, 110, false));
+    assert_eq!(is_hand_value_valid(1, 20, false), false);
+    assert_eq!(is_hand_value_valid(1, 20, true), false);
+    assert_eq!(is_hand_value_valid(2, 20, false), false);
+    assert_eq!(is_hand_value_valid(3, 20, false), false);
+    assert_eq!(is_hand_value_valid(4, 20, false), false);
+}
+
+#[test]
+fn test_round_up() {
+    assert_eq!(round_up_100(200), 200);
+    assert_eq!(round_up_100(465), 500);
+    assert_eq!(round_up_100(1230), 1300);
+    assert_eq!(round_up_100(890), 900);
+    assert_eq!(round_up_100(705), 800);
+    assert_eq!(round_up_100(2000), 2000);
 }
